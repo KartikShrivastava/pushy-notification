@@ -9,12 +9,18 @@ function startWebPushNotificationFlow() {
 
   // Request for user permission if not asked before
   if (Notification.permission === 'default') {
-    registerServiceWorkerPromise
-      .then(function (registrationInfo) {
-        return requestNotificationPermission()
-      })
-      .then(function (permissionResult) {
-        handleNotificationPermission(permissionResult)
+    Promise.all([registerServiceWorkerPromise, requestNotificationPermission()])
+      .then(function (values) {
+        registrationObject = values[0]
+        permissionResult = values[1]
+        
+        // Subscriber browser once user grants the permission
+        if (permissionResult === 'granted') {
+          subscribeBrowser(registrationObject)
+            .then(function (result) {
+              console.log(result)
+            })
+        }
       })
   }
 }
@@ -22,9 +28,8 @@ function startWebPushNotificationFlow() {
 function registerServiceWorker() {
   return navigator.serviceWorker
     .register('./static/service-worker.js')
-    .then(function (registrationInfo) {
-        console.log('Service worker registered with registration info: ', registrationInfo)
-        return registrationInfo
+    .then(function (registrationObject) {
+        return registrationObject
     })
     .catch(function (err) {
         console.error('Unable to register service worker.', err)
@@ -53,11 +58,29 @@ function isRequestPermissionPromiseSupported() {
   return true;
 }
 
-function handleNotificationPermission(permissionResult) {
-  if (permissionResult !== 'granted') {
-    console.log('Notification permission not granted.');
+// Copied from the web-push documentation
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
   }
-  else if (permissionResult === 'granted') {
-    console.log('Notification permission granted, bam!')
+  return outputArray;
+}
+
+function subscribeBrowser(registrationObject) {
+  const subscribeOptions = {
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(
+      'BMRyBDaAbT6TVIBhfqzlb392KYoTVbUqgBDS8Z9uUFA5h6YHtlWsxwXskXkiX6LNRuh0yOsw-zAbfiEMfBZncA8',
+    ),
   }
+
+  return registrationObject.pushManager.subscribe(subscribeOptions);
 }
