@@ -1,40 +1,86 @@
-function checkWebPushNotificationSupport() {
-    if(!('serviceWorker' in navigator)) {
-        return
-    }
-    
-    if(!('PushManager' in window)) {
-        return
-    }
+function startWebPushNotificationFlow() {
+  // Check if browser support web push and notifications
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      return
+  }
 
-    registerServiceWorker()
+  // Register service worker
+  const registerServiceWorkerPromise = registerServiceWorker()
+
+  // Request for user permission if not asked before
+  if (Notification.permission === 'default') {
+    Promise.all([registerServiceWorkerPromise, requestNotificationPermission()])
+      .then(function (values) {
+        registrationObject = values[0]
+        permissionResult = values[1]
+        
+        // Subscriber browser once user grants the permission
+        if (permissionResult === 'granted') {
+          subscribeBrowser(registrationObject)
+            .then(function (result) {
+              console.log(result)
+            })
+        }
+      })
+  }
 }
 
 function registerServiceWorker() {
-    return navigator.serviceWorker
-        .register('./static/service-worker.js')
-        .then(function (registration) {
-            console.log('Service worker registered.', registration)
-            askPermission()
-            return registration
-        })
-        .catch(function (err) {
-            console.error('Unable to register service worker.', err)
-        })
+  return navigator.serviceWorker
+    .register('./static/service-worker.js')
+    .then(function (registrationObject) {
+        return registrationObject
+    })
+    .catch(function (err) {
+        console.error('Unable to register service worker.', err)
+    })
 }
 
-function askPermission() {
-    return new Promise(function (resolve, reject) {
-      const permissionResult = Notification.requestPermission(function (result) {
-        resolve(result);
-      });
-  
-      if (permissionResult) {
-        permissionResult.then(resolve, reject);
-      }
-    }).then(function (permissionResult) {
-      if (permissionResult !== 'granted') {
-        throw new Error("We weren't granted permission.");
-      }
-    });
+function requestNotificationPermission() {
+  if (isRequestPermissionPromiseSupported()) {
+    return Notification.requestPermission()
   }
+  else {
+    return new Promise(function (resolve, reject) {
+      Notification.requestPermission(function (permissionResult) {
+        resolve(permissionResult)
+      })
+    })
+  }
+}
+
+function isRequestPermissionPromiseSupported() {
+  try {
+    Notification.requestPermission().then();
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+// Copied from the web-push documentation
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+function subscribeBrowser(registrationObject) {
+  const subscribeOptions = {
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(
+      'BMRyBDaAbT6TVIBhfqzlb392KYoTVbUqgBDS8Z9uUFA5h6YHtlWsxwXskXkiX6LNRuh0yOsw-zAbfiEMfBZncA8',
+    ),
+  }
+
+  return registrationObject.pushManager.subscribe(subscribeOptions);
+}
