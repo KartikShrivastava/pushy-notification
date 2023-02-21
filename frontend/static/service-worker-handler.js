@@ -1,40 +1,63 @@
-function checkWebPushNotificationSupport() {
-    if(!('serviceWorker' in navigator)) {
-        return
-    }
-    
-    if(!('PushManager' in window)) {
-        return
-    }
+function startWebPushNotificationFlow() {
+  // Check if browser support web push and notifications
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      return
+  }
 
-    registerServiceWorker()
+  // Register service worker
+  const registerServiceWorkerPromise = registerServiceWorker()
+
+  // Request for user permission if not asked before
+  if (Notification.permission === 'default') {
+    registerServiceWorkerPromise
+      .then(function (registrationInfo) {
+        return requestNotificationPermission()
+      })
+      .then(function (permissionResult) {
+        handleNotificationPermission(permissionResult)
+      })
+  }
 }
 
 function registerServiceWorker() {
-    return navigator.serviceWorker
-        .register('./static/service-worker.js')
-        .then(function (registration) {
-            console.log('Service worker registered.', registration)
-            askPermission()
-            return registration
-        })
-        .catch(function (err) {
-            console.error('Unable to register service worker.', err)
-        })
+  return navigator.serviceWorker
+    .register('./static/service-worker.js')
+    .then(function (registrationInfo) {
+        console.log('Service worker registered with registration info: ', registrationInfo)
+        return registrationInfo
+    })
+    .catch(function (err) {
+        console.error('Unable to register service worker.', err)
+    })
 }
 
-function askPermission() {
-    return new Promise(function (resolve, reject) {
-      const permissionResult = Notification.requestPermission(function (result) {
-        resolve(result);
-      });
-  
-      if (permissionResult) {
-        permissionResult.then(resolve, reject);
-      }
-    }).then(function (permissionResult) {
-      if (permissionResult !== 'granted') {
-        throw new Error("We weren't granted permission.");
-      }
-    });
+function requestNotificationPermission() {
+  if (isRequestPermissionPromiseSupported()) {
+    return Notification.requestPermission()
   }
+  else {
+    return new Promise(function (resolve, reject) {
+      Notification.requestPermission(function (permissionResult) {
+        resolve(permissionResult)
+      })
+    })
+  }
+}
+
+function isRequestPermissionPromiseSupported() {
+  try {
+    Notification.requestPermission().then();
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+function handleNotificationPermission(permissionResult) {
+  if (permissionResult !== 'granted') {
+    console.log('Notification permission not granted.');
+  }
+  else if (permissionResult === 'granted') {
+    console.log('Notification permission granted, bam!')
+  }
+}
