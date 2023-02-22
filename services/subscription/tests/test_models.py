@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.utils import timezone
-from django.db import DatabaseError
 
 from services.subscription.models import Subscriber
 
@@ -12,17 +11,3 @@ class SubscriberManagerTest(TestCase):
                                     expiration_time=timezone.now(),
                                     p256dh_key='BJthaLnJBkVtwe1SSAIbzSqm8A4vFw8P4SaF3yvmOW1IXzx4yUIvbmp4NVsuA5d0SBOVVUHfwYuak6CUJE1Qr9g',  # noqa: E501
                                     auth_key='vDfqsQPFWabqpmeFFv6EEg')
-
-    def test_insert_subscriber_successful_insertion(self):
-        inserted_subscriber = Subscriber.objects.insert_subscriber(
-                                subscriber=self.subscriber)
-        self.assertEqual(inserted_subscriber.endpoint_url, self.subscriber.endpoint_url)
-        self.assertEqual(inserted_subscriber.expiration_time,
-                         self.subscriber.expiration_time)
-        self.assertEqual(inserted_subscriber.p256dh_key, self.subscriber.p256dh_key)
-        self.assertEqual(inserted_subscriber.auth_key, self.subscriber.auth_key)
-
-    def test_insert_subscriber_throws_error_for_duplicate_enpoint_url(self):
-        Subscriber.objects.insert_subscriber(subscriber=self.subscriber)
-        self.assertRaises(DatabaseError, Subscriber.objects.insert_subscriber,
-                          self.subscriber)

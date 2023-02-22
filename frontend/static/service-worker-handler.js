@@ -86,6 +86,7 @@ function subscribeBrowser(registrationObject) {
   const subscribeOptions = {
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
+      // TODO: find a better way to fetch public vapid key from constants.py?
       'BMRyBDaAbT6TVIBhfqzlb392KYoTVbUqgBDS8Z9uUFA5h6YHtlWsxwXskXkiX6LNRuh0yOsw-zAbfiEMfBZncA8',
     ),
   }
@@ -105,5 +106,11 @@ function postPushSubscriptionToDatabase(pushSubscriptionObject) {
     if (!response.ok)
       throw new Error('Bad status code from server.')
     return response
+  })
+  .then(function (serverResponse) {
+    console.log(serverResponse)
+  })
+  .catch(function (err) {
+    console.error('Unable to send push subscription to database.', err)
   })
 }
