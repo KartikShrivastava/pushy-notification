@@ -57,7 +57,7 @@ function getAllNotificationPayloadsFromDatabse() {
 
     payloads.forEach(payload => {
       const markup = `<li>${JSON.stringify(payload)}</li>`
-      payloadOrderedList.insertAdjacentElement('beforeend', markup)
+      payloadOrderedList.insertAdjacentHTML('beforeend', markup)
     })
   })
   .catch(function (err) {
