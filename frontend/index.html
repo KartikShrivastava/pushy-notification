@@ -15,7 +15,17 @@
     </h1>
 
     <div style="padding-left: 2%; font-family: sans-serif;">
-        <!-- <form action="#" onsubmit="return fetchNotificationPayload(this)"> -->
+        <h2>Subscriber list</h2>
+        <button id="refresh-subscribers">Refresh</button>
+
+        <!-- dinamically fill this list with subscribers from database -->
+        <ol class="subscriber-unordered-list"></ol>
+    </div>
+
+    <div style="padding-left: 2%; font-family: sans-serif;">
+        <h2>Create notification payload</h2>
+        
+        <!-- create notification payload form -->
         <form class="payload-form">
             <label for="ttl">Title</label>
             <input type="text" id="ttl" name="title" required>
@@ -23,13 +33,13 @@
             <label for="bdy">Body</label>
             <input type="text" id="bdy" name="body" required>
 
-            <!-- <input type="submit" value="Submit"> -->
             <button type="submit">Submit</button>
         </form>
     </div>
 
     <script src="js/service-worker-handler.js"></script>
     <script src="js/notification-payload.js"></script>
+    <script src="js/subscriber-list.js"></script>
 </body>
 
 </html>
