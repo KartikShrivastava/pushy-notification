@@ -8,14 +8,14 @@ function getAllSubscribers() {
         return response.json()
     })
     .then(function (subscribers) {
-        const subscriberUList = document.querySelector('.subscriber-unordered-list')
+        const subscriberOrderedList = document.querySelector('.subscriber-ordered-list')
         
         // clear the list first
-        subscriberUList.innerHTML = ''
+        subscriberOrderedList.innerHTML = ''
         
         subscribers.forEach(subscriber => {
             const markup = `<li>${JSON.stringify(subscriber)}</li>`
-            subscriberUList.insertAdjacentHTML('beforeend', markup)
+            subscriberOrderedList.insertAdjacentHTML('beforeend', markup)
         })
     })
     .catch(function (err) {

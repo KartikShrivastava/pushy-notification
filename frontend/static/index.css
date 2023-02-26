@@ -32,7 +32,7 @@ div {
     font-family: sans-serif;
 }
 
-.subscriber-unordered-list {
+ol {
     height: 150px;
     overflow: auto;
     font-size: 10px;
