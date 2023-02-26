@@ -1,4 +1,4 @@
-subscribersStore = []
+var subscribersStore = {}
 
 function getAllSubscribers() {
     return fetch('http://127.0.0.1:8000/subscribers/', {
@@ -42,3 +42,5 @@ function getAllSubscribers() {
 }
 
 document.getElementById('refresh-subscribers').addEventListener('click', getAllSubscribers)
+
+window.subscribersStore = subscribersStore

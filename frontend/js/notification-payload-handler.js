@@ -40,7 +40,7 @@ function saveNotificationPayloadToDatabase(payload) {
     })
 }
 
-notificationPayloadsStore = []
+var notificationPayloadsStore = {}
 let selectedPayloadListItem = null
 
 function getAllNotificationPayloadsFromDatabse() {
@@ -77,7 +77,7 @@ function getAllNotificationPayloadsFromDatabse() {
         selectedPayloadListItem = listItem
       })
 
-      listItem.textContent = payload.title
+      listItem.textContent = `${payload.title} (body: ${payload.body})`
       listItem.dataset.index = index
 
       payloadOrderedList.appendChild(listItem)
@@ -90,3 +90,5 @@ function getAllNotificationPayloadsFromDatabse() {
 
 document.getElementById('refresh-payloads')
         .addEventListener('click', getAllNotificationPayloadsFromDatabse)
+
+window.notificationPayloadsStore = notificationPayloadsStore
