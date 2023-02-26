@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('rest_framework.urls')),
     path('', include('apps.subscribers.urls.crud')),
+    path('', include('apps.notifications.urls.crud')),
 ]
