@@ -42,14 +42,23 @@ ol {
     padding-left: 15px;
 }
 
+li {
+    padding: 5px;
+}
+
 li:nth-child(even) {
-    background-color: #eaffe6;
+    background-color: #f1f1f1;
     border-radius: 5px;
     margin-top: 5px;
 }
 
 li:nth-child(odd) {
-    background-color: #d2e2cf;
+    background-color: #e7e7e7;
     border-radius: 5px;
     margin-top: 5px;
+}
+
+li:hover {
+    background-color: rgb(211, 211, 211);
+    cursor: pointer;
 }

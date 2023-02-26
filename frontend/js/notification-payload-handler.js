@@ -40,6 +40,9 @@ function saveNotificationPayloadToDatabase(payload) {
     })
 }
 
+notificationPayloadsStore = []
+let selectedPayloadListItem = null
+
 function getAllNotificationPayloadsFromDatabse() {
   return fetch('http://127.0.0.1:8000/notifications/payloads/', {
     method: 'GET',
@@ -50,14 +53,34 @@ function getAllNotificationPayloadsFromDatabse() {
     return response.json()
   })
   .then(function (payloads) {
-    const payloadOrderedList = document.querySelector('.payload-ordered-list')
+    // Save notification payload for later processing
+    notificationPayloadsStore = payloads
 
-    // clear the list first
+    const payloadOrderedList = document.getElementById('payload-ordered-list')
+
+    // Clear the list
     payloadOrderedList.innerHTML = ''
 
-    payloads.forEach(payload => {
-      const markup = `<li>${JSON.stringify(payload)}</li>`
-      payloadOrderedList.insertAdjacentHTML('beforeend', markup)
+    payloads.forEach((payload, index) => {
+      const listItem = document.createElement('li')
+
+      // Add click event listener to select only one payload at a time as click event
+      listItem.addEventListener('click', () => {
+        // De-select previously selected payload
+        if (selectedPayloadListItem) {
+          selectedPayloadListItem.classList.remove('selected')
+          selectedPayloadListItem.style.border = 'none'
+        }
+
+        listItem.classList.add('selected')
+        listItem.style.border = '2px solid green'
+        selectedPayloadListItem = listItem
+      })
+
+      listItem.textContent = payload.title
+      listItem.dataset.index = index
+
+      payloadOrderedList.appendChild(listItem)
     })
   })
   .catch(function (err) {

@@ -19,7 +19,7 @@
         <button id="refresh-subscribers">Refresh</button>
 
         <!-- dinamically fill this list with subscribers from database -->
-        <ol class="subscriber-ordered-list"></ol>
+        <ol id="subscriber-ordered-list"></ol>
     </div>
 
     <div>
@@ -41,15 +41,13 @@
         <h2>Notification payload list</h2>
         <button id="refresh-payloads">Refresh</button>
 
-        <ol class="payload-ordered-list"></ol>
+        <ol id="payload-ordered-list"></ol>
     </div>
 
     <div>
         <h2>Send notification</h2>
 
-        <p>
-            Note: Current implementation sends first notification(if exist) payload to all subscribers
-        </p>
+        <p>Note: Select at-least one subscriber and exactly one notification payload.</p>
 
         <button type="submit">Send</button>
     </div>

@@ -1,3 +1,5 @@
+subscribersStore = []
+
 function getAllSubscribers() {
     return fetch('http://127.0.0.1:8000/subscribers/', {
         method: 'GET',
@@ -8,14 +10,30 @@ function getAllSubscribers() {
         return response.json()
     })
     .then(function (subscribers) {
-        const subscriberOrderedList = document.querySelector('.subscriber-ordered-list')
+        subscribersStore = subscribers
+
+        const subscriberOrderedList = document.getElementById('subscriber-ordered-list')
         
-        // clear the list first
+        // clear the list
         subscriberOrderedList.innerHTML = ''
         
-        subscribers.forEach(subscriber => {
-            const markup = `<li>${JSON.stringify(subscriber)}</li>`
-            subscriberOrderedList.insertAdjacentHTML('beforeend', markup)
+        subscribers.forEach((subscriber, index) => {
+            const listItem = document.createElement('li')
+
+            // Add click event listener and select subscriber as click event
+            listItem.addEventListener('click', () => {
+                listItem.classList.toggle('selected')
+
+                if (listItem.classList.contains('selected'))
+                    listItem.style.border = '2px solid green'
+                else
+                    listItem.style.border = 'none'
+            })
+
+            listItem.textContent = subscriber.subscriber_id
+            listItem.dataset.index = index
+
+            subscriberOrderedList.appendChild(listItem)
         })
     })
     .catch(function (err) {
