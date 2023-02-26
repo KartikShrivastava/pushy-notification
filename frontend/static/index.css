@@ -28,6 +28,8 @@ div {
     background-color: #dddddd;
     padding: 20px;
     margin: 20px;
+    padding-left: 2%;
+    font-family: sans-serif;
 }
 
 .subscriber-unordered-list {

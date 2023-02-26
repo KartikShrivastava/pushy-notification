@@ -14,7 +14,7 @@
         Push'y' Notification
     </h1>
 
-    <div style="padding-left: 2%; font-family: sans-serif;">
+    <div>
         <h2>Subscriber list</h2>
         <button id="refresh-subscribers">Refresh</button>
 
@@ -22,7 +22,7 @@
         <ol class="subscriber-unordered-list"></ol>
     </div>
 
-    <div style="padding-left: 2%; font-family: sans-serif;">
+    <div>
         <h2>Create notification payload</h2>
         
         <!-- create notification payload form -->
@@ -35,6 +35,16 @@
 
             <button type="submit">Submit</button>
         </form>
+    </div>
+
+    <div>
+        <h2>Send notification</h2>
+
+        <p>
+            Note: Current implementation sends first notification payload to all subscribers
+        </p>
+
+        <button type="submit">Send</button>
     </div>
 
     <script src="js/service-worker-handler.js"></script>
