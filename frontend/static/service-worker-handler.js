@@ -14,13 +14,22 @@ function startWebPushNotificationFlow() {
         registrationObject = values[0]
         permissionResult = values[1]
         
-        // Subscriber browser once user grants the permission
-        if (permissionResult === 'granted') {
-          subscribeBrowser(registrationObject)
-            .then(function (result) {
-              console.log(result)
-            })
-        }
+        if (permissionResult === 'granted')
+          return Promise.resolve(registrationObject)
+        else
+          return Promise.reject(new Error(permissionResult))
+      })
+      // Subscriber browser once user grants the permission
+      .then(function (registrationObject) {
+        return subscribeBrowser(registrationObject)
+      })
+      // Save pushSubscription object to the database
+      .then(function (pushSubscriptionObject) {
+        return postPushSubscriptionToDatabase(pushSubscriptionObject)
+      })
+      // Throw error if permission is not granted
+      .catch(function (err) {
+        console.error('Notification permission not granted with', err)
       })
   }
 }
@@ -58,7 +67,6 @@ function isRequestPermissionPromiseSupported() {
   return true;
 }
 
-// Copied from the web-push documentation
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding)
@@ -78,9 +86,31 @@ function subscribeBrowser(registrationObject) {
   const subscribeOptions = {
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
+      // TODO: find a better way to fetch public vapid key from constants.py?
       'BMRyBDaAbT6TVIBhfqzlb392KYoTVbUqgBDS8Z9uUFA5h6YHtlWsxwXskXkiX6LNRuh0yOsw-zAbfiEMfBZncA8',
     ),
   }
 
   return registrationObject.pushManager.subscribe(subscribeOptions);
+}
+
+function postPushSubscriptionToDatabase(pushSubscriptionObject) {
+  return fetch('http://127.0.0.1:8000/subscribers/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(pushSubscriptionObject)
+  })
+  .then(function (response) {
+    if (!response.ok)
+      throw new Error('Bad status code from server.')
+    return response
+  })
+  .then(function (serverResponse) {
+    console.log(serverResponse)
+  })
+  .catch(function (err) {
+    console.error('Unable to send push subscription to database.', err)
+  })
 }
