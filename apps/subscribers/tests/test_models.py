@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 
-from services.subscription.models import Subscriber
+from apps.subscribers.models.subscriber import Subscriber
 
 
 class SubscriberManagerTest(TestCase):

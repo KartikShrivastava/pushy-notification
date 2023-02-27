@@ -1,10 +1,11 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
-from services.subscription.serializers import SubscriberSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from apps.subscribers.serializers.subscriber import SubscriberSerializer
 
 
-class SubscriberView(APIView):
+class SubscriberCRUDView(APIView):
     def post(self, request):
         # modify the request.data according to Subscriber model fields
         request.data['endpoint_url'] = request.data.get('endpoint')
