@@ -8,6 +8,7 @@ class SubscriberSerializer(serializers.ModelSerializer):
         model = Subscriber
         fields = '__all__'
 
+    # TODO: move object creation to custom implementation
     def create(self, validated_data):
         inserted_subscriber = Subscriber.objects.create(**validated_data)
         return inserted_subscriber

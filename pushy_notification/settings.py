@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # Custom Apps
     'apps.subscribers',
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [

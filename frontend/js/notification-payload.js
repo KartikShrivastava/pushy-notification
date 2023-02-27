@@ -15,6 +15,7 @@ function fetchNotificationPayload(event) {
     return false
 }
 
+// Add click event handler to notification-payload submit button
 const notificationPayloadForm = document.querySelector('.payload-form')
 notificationPayloadForm.addEventListener('submit', fetchNotificationPayload)
 
