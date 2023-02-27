@@ -20,17 +20,21 @@ function triggerBulkPushNotification() {
     sendPayload.subscriber_ids = selectedSubscribersId
     sendPayload.payload_id = selectedNotificationPayloadId
 
-    console.log(JSON.stringify(sendPayload))
-
-    // return fetch('http://127.0.0.1:8000/notifications/records', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(payload),
-    // })
-    // .then(function (response) {
-    // })
+    return fetch('http://127.0.0.1:8000/notifications/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+    .then(function (response) {
+        if (!response.ok)
+            throw new Error('Bad status code from server.')
+        return response
+    })
+    .catch(function (err) {
+        console.error('Unable to send bulk notification trigger request')
+    })
 }
 
 document.getElementById('trigger-notifications')
