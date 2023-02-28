@@ -17,9 +17,11 @@ class SendBulkNotificationRequestSerializer(serializers.Serializer):
                 Subscriber.objects.get(subscriber_id=subscriber_id)
             except Subscriber.DoesNotExist:
                 raise serializers.ValidationError('Invalid subscriber_id', subscriber_id)
+        return value
 
     def validate_payload_id(self, value):
         try:
             Payload.objects.get(payload_id=value)
         except Payload.DoesNotExist:
             raise serializers.ValidationError('Invalid payload_id', value)
+        return value
