@@ -25,15 +25,21 @@ function triggerBulkPushNotification() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(sendPayload),
     })
     .then(function (response) {
-        if (!response.ok)
-            throw new Error('Bad status code from server.')
-        return response
+        if (response.ok) {
+            return response.json()
+        }
+        else {
+            return response.json().then(error => {
+                throw new Error(JSON.stringify(error))
+            })
+        }
     })
-    .catch(function (err) {
-        console.error('Unable to send bulk notification trigger request')
+    .then(responseData => {})
+    .catch(function (error) {
+        console.error('Unable to send bulk notification trigger request', error)
     })
 }
 
