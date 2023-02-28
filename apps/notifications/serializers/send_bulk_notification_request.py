@@ -4,7 +4,7 @@ from apps.subscribers.models.subscriber import Subscriber
 from apps.notifications.models.payload import Payload
 
 
-class SendNotificationRequestSerializer(serializers.Serializer):
+class SendBulkNotificationRequestSerializer(serializers.Serializer):
     subscriber_ids = serializers.ListField(child=serializers.UUIDField())
     payload_id = serializers.UUIDField()
 

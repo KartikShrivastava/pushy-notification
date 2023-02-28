@@ -1,7 +1,7 @@
 from django.urls import path
 
 from apps.notifications.views.crud import NotificationPayloadCRUDView
-from apps.notifications.views.bulk_events import SendBulkNotificationsView
+from apps.notifications.views.bulk_notification_events import SendBulkNotificationsView
 
 
 urlpatterns = [
