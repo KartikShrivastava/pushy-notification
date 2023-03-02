@@ -19,7 +19,7 @@ class NotificationService:
     def _create_notification_payload_json(self, payload):
         payload_data = {
             'title': payload.title,
-            'message': payload.body
+            'body': payload.body
         }
         return json.dumps(payload_data)
 

@@ -8,7 +8,7 @@ self.addEventListener('push', function(event) {
     }
 
     const pushInfoPromise = self.registration.showNotification(event.data.title, {
-        body: event.data.message
+        body: event.data.body
     });
 
     event.waitUntil(pushInfoPromise);
