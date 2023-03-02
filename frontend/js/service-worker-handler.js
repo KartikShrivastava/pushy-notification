@@ -34,6 +34,10 @@ function startWebPushNotificationFlow() {
   }
 }
 
+// add event listener to button to start notification flow
+document.getElementById('request-notification-permission')
+        .addEventListener('click', startWebPushNotificationFlow)
+
 function registerServiceWorker() {
   return navigator.serviceWorker
     .register('/frontend/js/service-worker.js')
