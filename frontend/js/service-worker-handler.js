@@ -36,7 +36,7 @@ function startWebPushNotificationFlow() {
 
 function registerServiceWorker() {
   return navigator.serviceWorker
-    .register('./static/service-worker.js')
+    .register('/frontend/js/service-worker.js')
     .then(function (registrationObject) {
         return registrationObject
     })
