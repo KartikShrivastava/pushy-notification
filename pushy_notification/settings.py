@@ -142,3 +142,6 @@ CORS_ORIGIN_WHITELIST = ()
 
 # load .env file to access environment variables
 load_dotenv()
+
+# Celery configuration options
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'

@@ -1,9 +1,8 @@
-from pywebpush import webpush, WebPushException
-
 from apps.subscribers.models.subscriber import Subscriber
 from apps.notifications.models.payload import Payload
 import os
 import json
+from pushy_notification.celery import celery_app
 
 
 class NotificationService:
@@ -34,21 +33,16 @@ class NotificationService:
         try:
             for subscriber_id in subscriber_ids:
                 subscriber = Subscriber.objects.get(subscriber_id=subscriber_id)
+                payload = Payload.objects.get(payload_id=payload_id)
                 subscription_info = self._create_subscription_info_dict(
                                         subscriber=subscriber)
-
-                payload = Payload.objects.get(payload_id=payload_id)
                 payload_data = self._create_notification_payload_json(payload=payload)
-
                 vapid_claims = self._create_vapid_claims_dict()
-
                 PRIVATE_VAPID_KEY = os.getenv('PRIVATE_VAPID_KEY')
 
-                webpush(subscription_info=subscription_info,
-                        data=payload_data,
-                        vapid_private_key=PRIVATE_VAPID_KEY,
-                        vapid_claims=vapid_claims)
-        except WebPushException as e:
-            if e.response and e.response.json():
-                respponse = e.response.json()
-                print(respponse)
+                async_task_result = celery_app.send_task('send_notification', args=[
+                    subscription_info, payload_data, PRIVATE_VAPID_KEY, vapid_claims
+                ])
+                print(async_task_result.id)
+        except Exception as e:
+            raise e

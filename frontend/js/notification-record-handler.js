@@ -37,7 +37,9 @@ function triggerBulkPushNotification() {
             })
         }
     })
-    .then(responseData => {})
+    .then(responseData => {
+        console.log(responseData)
+    })
     .catch(function (error) {
         console.error('Unable to send bulk notification trigger request', error)
     })
