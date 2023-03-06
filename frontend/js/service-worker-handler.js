@@ -25,7 +25,8 @@ function startWebPushNotificationFlow() {
       })
       // Save pushSubscription object to the database
       .then(function (pushSubscriptionObject) {
-        return postPushSubscriptionToDatabase(pushSubscriptionObject)
+        payloadData = convertPushSubscriptionToDBPayload(pushSubscriptionObject)
+        return postPushSubscriptionToDatabase(payloadData)
       })
       // Throw error if permission is not granted
       .catch(function (err) {
@@ -92,6 +93,15 @@ function subscribeBrowser(registrationObject) {
   }
 
   return registrationObject.pushManager.subscribe(subscribeOptions);
+}
+
+function convertPushSubscriptionToDBPayload(pushSubscriptionObject) {
+  return {
+    'endpoint_url': pushSubscriptionObject.endpoint,
+    'expiration_time': pushSubscriptionObject.expirationTime,
+    'p256dh_key': pushSubscriptionObject.keys.p256dh,
+    'auth_key': pushSubscriptionObject.keys.auth
+  }
 }
 
 function postPushSubscriptionToDatabase(pushSubscriptionObject) {
