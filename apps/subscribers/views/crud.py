@@ -11,7 +11,7 @@ class SubscriberCRUDView(APIView):
     def get(self, request):
         subscribers = Subscriber.objects.all()
         subscriber_serializer = SubscriberSerializer(subscribers, many=True)
-        return Response(subscriber_serializer.data)
+        return Response(subscriber_serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         subscriber_serializer = SubscriberSerializer(data=request.data)
