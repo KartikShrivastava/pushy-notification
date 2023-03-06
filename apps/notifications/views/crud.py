@@ -15,7 +15,6 @@ class NotificationPayloadCRUDView(APIView):
 
     def post(self, request):
         payload_serializer = PayloadSerializer(data=request.data)
-        if payload_serializer.is_valid():
-            PayloadService.create_payload(validated_data=payload_serializer.validated_data)
-            return Response(payload_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(payload_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        payload_serializer.is_valid(raise_exception=True)
+        PayloadService.create_payload(validated_data=payload_serializer.validated_data)
+        return Response(payload_serializer.data, status=status.HTTP_201_CREATED)
