@@ -11,7 +11,7 @@ class NotificationPayloadCRUDView(APIView):
     def get(self, request):
         payloads = Payload.objects.all()
         payload_serializer = PayloadSerializer(payloads, many=True)
-        return Response(payload_serializer.data)
+        return Response(payload_serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         payload_serializer = PayloadSerializer(data=request.data)
