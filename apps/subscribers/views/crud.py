@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from apps.subscribers.models.subscriber import Subscriber
 from apps.subscribers.serializers.subscriber import SubscriberSerializer
+from apps.subscribers.services.subscriber import SubscriberService
 
 
 class SubscriberCRUDView(APIView):
@@ -21,6 +22,7 @@ class SubscriberCRUDView(APIView):
 
         subscriber_serializer = SubscriberSerializer(data=request.data)
         if subscriber_serializer.is_valid():
-            subscriber_serializer.save()
+            SubscriberService.create_subscriber(
+                validated_data=subscriber_serializer.validated_data)
             return Response(subscriber_serializer.data, status=status.HTTP_201_CREATED)
         return Response(subscriber_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
