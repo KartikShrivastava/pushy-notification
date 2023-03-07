@@ -12,14 +12,9 @@ class SendBulkNotificationsView(APIView):
         request_serializer.is_valid(raise_exception=True)
 
         # TODO: fix error response is not being correctly generated with rabbitmq offline
-        try:
-            NotificationService().send_bulk_notifications(
-                                subscriber_ids=request_serializer.data['subscriber_ids'],
-                                payload_id=request_serializer.data['payload_id'])
-            return Response({
-                    'message': 'Web push notifications scheduled successfully'
-            }, status=status.HTTP_202_ACCEPTED)
-        except Exception as e:
-            return Response({
-                'error': e
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        NotificationService().send_bulk_notifications(
+                            subscriber_ids=request_serializer.data['subscriber_ids'],
+                            payload_id=request_serializer.data['payload_id'])
+        return Response({
+                'message': 'Web push notifications scheduled successfully'
+        }, status=status.HTTP_202_ACCEPTED)
