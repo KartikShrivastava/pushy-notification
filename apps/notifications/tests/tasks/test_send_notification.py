@@ -26,7 +26,7 @@ class TestSendNotificationTask(TestCase):
         self.payload_id = payload.payload_id
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-    def test_send_notification_makes_call_to_webpush(self, mocked_func):
+    def test_send_notification_makes_call_to_webpush(self):
         subscriber = Subscriber.objects.get(subscriber_id=self.subscriber_ids[0])
         payload = Payload.objects.get(payload_id=self.payload_id)
         subscription_info = NotificationService()._create_subscription_info_dict(
