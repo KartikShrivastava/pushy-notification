@@ -3,6 +3,7 @@ from apps.notifications.models.payload import Payload
 import os
 import json
 from pushy_notification.celery import celery_app
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class NotificationService:
@@ -40,9 +41,8 @@ class NotificationService:
                 vapid_claims = self._create_vapid_claims_dict()
                 PRIVATE_VAPID_KEY = os.getenv('PRIVATE_VAPID_KEY')
 
-                async_task_result = celery_app.send_task('send_notification', args=[
+                celery_app.send_task('send_notification', args=[
                     subscription_info, payload_data, PRIVATE_VAPID_KEY, vapid_claims
                 ])
-                print(async_task_result.id)
-        except Exception as e:
+        except ObjectDoesNotExist as e:
             raise e
