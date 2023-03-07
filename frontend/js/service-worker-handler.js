@@ -100,11 +100,12 @@ function subscribeBrowser(registrationObject) {
 }
 
 function convertPushSubscriptionToDBPayload(pushSubscriptionObject) {
+  jsonData = JSON.parse(JSON.stringify(pushSubscriptionObject))
   return {
-    'endpoint_url': pushSubscriptionObject.endpoint,
-    'expiration_time': pushSubscriptionObject.expirationTime,
-    'p256dh_key': pushSubscriptionObject.keys.p256dh,
-    'auth_key': pushSubscriptionObject.keys.auth
+    'endpoint_url': jsonData.endpoint,
+    'expiration_time': jsonData.expirationTime,
+    'p256dh_key': jsonData.keys.p256dh,
+    'auth_key': jsonData.keys.auth
   }
 }
 
