@@ -1,0 +1,64 @@
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 10px;
+    background-color: #dddddd;
+    padding: 20px;
+    margin: 20px;
+    padding-left: 2%;
+    font-family: sans-serif;
+}
+
+ol {
+    height: 150px;
+    overflow: auto;
+    font-size: 10px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    padding-left: 15px;
+}
+
+li {
+    padding: 5px;
+}
+
+li:nth-child(even) {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+li:nth-child(odd) {
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+li:hover {
+    background-color: rgb(211, 211, 211);
+    cursor: pointer;
+}

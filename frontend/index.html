@@ -1,17 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pushy Notification</title>
+    <link rel="stylesheet" href="static/index.css">
 </head>
-<body onload="checkWebPushNotificationSupport()">
-    <div style="padding-left: 2%; font-family: sans-serif;">
-        <h1 style="font-size: 70px;">Push'y' Notification</h1>
+
+<body onload="startWebPushNotificationFlow()">
+    <h1 style="font-size: 70px; padding-left: 20px; font-family: sans-serif;">
+        Push'y' Notification
+    </h1>
+
+    <div>
+        <h2>Subscriber list</h2>
+        <button id="refresh-subscribers">Refresh</button>
+
+        <!-- dinamically fill this list with subscribers from database -->
+        <ol id="subscriber-ordered-list"></ol>
     </div>
 
-    <!-- Register service-worker.js if supported by browser -->
-    <script src="static/service-worker-handler.js"></script>
+    <div>
+        <h2>Create notification payload</h2>
+
+        <!-- create notification payload form -->
+        <form class="payload-form">
+            <label for="ttl">Title</label>
+            <input type="text" id="ttl" name="title" required>
+
+            <label for="bdy">Body</label>
+            <input type="text" id="bdy" name="body" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Notification payload list</h2>
+        <button id="refresh-payloads">Refresh</button>
+
+        <ol id="payload-ordered-list"></ol>
+    </div>
+
+    <div>
+        <h2>Send notification</h2>
+
+        <p>Note: Select at-least one subscriber and exactly one notification payload.</p>
+
+        <button id="trigger-notifications" type="submit">Send</button>
+    </div>
+
+    <script src="js/service-worker-handler.js"></script>
+    <script src="js/notification-payload-handler.js"></script>
+    <script src="js/subscriber-handler.js"></script>
+    <script src="js/notification-record-handler.js"></script>
 </body>
+
 </html>
