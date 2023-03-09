@@ -1,14 +1,12 @@
 from rest_framework.test import APITestCase
 from apps.subscribers.models.subscriber import Subscriber
 from apps.subscribers.services.subscriber import SubscriberService
+from apps.subscribers.tests.factories.subscriber_request import SubscriberRequestFactory
 
 
 class TestSubscriberView(APITestCase):
     def setUp(self):
-        request_data = {'endpoint_url': 'https://fcm.googleapis.com/fcm/send/e-s0cN3uKzQ:APA91bF7FMhiKaweoRovSoz6bVYuDEFR2o4aCU9zCWjbRzoBWI1-KkV7M197JeyiZQuIm-Kg8St9UvHaElEg4lL028xA709bSeKLDrOYs2ghLKpKyWd4tZU6XGE0J5rbzq-xtxig0hsb',  # noqa: E501
-                        'expiration_time': None,
-                        'p256dh_key': 'BJthaLnJBkVtwe1SSAIbzSqm8A4vFw8P4SaF3yvmOW1IXzx4yUIvbmp4NVsuA5d0SBOVVUHfwYuak6CUJE1Qr9g',  # noqa: E501
-                        'auth_key': 'vDfqsQPFWabqpmeFFv6EEg'}
+        request_data = SubscriberRequestFactory()
         self.subscriber = SubscriberService.create_subscriber(request_data=request_data)
 
     def tearDown(self):
@@ -26,12 +24,7 @@ class TestSubscriberView(APITestCase):
 
     def test_post_method_inserts_subscriber_successfully(self):
         url = '/subscribers/'
-        data = {
-            "endpoint_url": "https://fcm.googleapis.com/fcm/send/fF8YFuWFGGM:APA91bE7zC7IdkTNO1sSk5nBytgK6JWPL0gf_sLvsfzoH24N_lSYDqF-0_fsxl-oYpSB3f6j1uVT-mzI0mnnjqaaotO7PoDFq20skCgC72K2fR0bPgUG-yic97jQa2vcgeo8y46rNElR",  # noqa: E501
-            "expiration_time": None,
-            "p256dh_key": "BIDRHIvK7e8iUhJmOe7tGYCxnoLBXyGsdK83g4Th7PeoTZulPCb_tRn7-k6iKIfSVhNgDqEmyywlgb8lKaRuu2Y",  # noqa: E501
-            "auth_key": "JO52DmZYsGUdxsWMb0tsNA"
-        }
+        data = SubscriberRequestFactory()
 
         response = self.client.post(url, data=data, format='json')
 
@@ -42,15 +35,10 @@ class TestSubscriberView(APITestCase):
 
     def test_post_method_returns_bad_response_for_invalid_data(self):
         url = '/subscribers/'
-        # incorrect keys
-        data_1 = {
-            "endpoint_url": "https://fcm.googleapis.com/fcm/send/fF8YFuWFGGM:APA91bE7zC7IdkTNO1sSk5nBytgK6JWPL0gf_sLvsfzoH24N_lSYDqF-0_fsxl-oYpSB3f6j1uVT-mzI0mnnjqaaotO7PoDFq20skCgC72K2fR0bPgUG-yic97jQa2vcgeo8y46rNElR",  # noqa: E501
-            "expiration_time": None,
-            "keys": {
-                "p256dh": "BIDRHIvK7e8iUhJmOe7tGYCxnoLBXyGsdK83g4Th7PeoTZulPCb_tRn7-k6iKIfSVhNgDqEmyywlgb8lKaRuu2Y",  # noqa: E501
-                "auth": "JO52DmZYsGUdxsWMb0tsNA"
-            }
-        }
+        # incorrect key name
+        data_1 = SubscriberRequestFactory()
+        endpoint_url = data_1.pop('endpoint_url')
+        data_1['endpoint'] = endpoint_url
         # empty endpoint
         data_2 = data_1
         data_2['endpoint_url'] = ''
