@@ -6,9 +6,9 @@ from apps.notifications.services.payload import PayloadService
 
 class TestPayloadView(APITestCase):
     def setUp(self):
-        self.validated_data = {'title': 'Test PN title',
-                               'body': 'Body of the web push notification'}
-        PayloadService.create_payload(validated_data=self.validated_data)
+        self.request_data = {'title': 'Test PN title',
+                             'body': 'Body of the web push notification'}
+        PayloadService.create_payload(request_data=self.request_data)
 
     def test_get_method_returns_valid_payloads(self):
         url = '/notifications/payloads/'
@@ -22,7 +22,7 @@ class TestPayloadView(APITestCase):
 
     def test_post_method_inserts_payload_successfully(self):
         url = '/notifications/payloads/'
-        data = self.validated_data
+        data = self.request_data
 
         response = self.client.post(url, data=data, format='json')
 
