@@ -1,15 +1,20 @@
 self.addEventListener('push', function(event) {
-    console.log('Push event received hurray!')
+    let notification_data = {}
     if (event.data) {
-        console.log('Data: ', event.data.text())
+        notification_data = JSON.parse(event.data.text())
     }
     else {
-        console.log('No data received')
+        console.error('No data received')
     }
 
-    const pushInfoPromise = self.registration.showNotification(event.data.title, {
-        body: event.data.body
-    });
+    const options = {
+        body: notification_data.message,
+    };
+
+    const pushInfoPromise = self.registration.showNotification(
+        notification_data.title,
+        options
+    );
 
     event.waitUntil(pushInfoPromise);
 })
