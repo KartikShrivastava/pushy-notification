@@ -2,12 +2,12 @@ from rest_framework.test import APITestCase
 
 from apps.notifications.models.payload import Payload
 from apps.notifications.services.payload import PayloadService
+from apps.notifications.tests.factories.payload_request import PayloadRequestFactory
 
 
 class TestPayloadView(APITestCase):
     def setUp(self):
-        self.request_data = {'title': 'Test PN title',
-                             'body': 'Body of the web push notification'}
+        self.request_data = PayloadRequestFactory()
         PayloadService.create_payload(request_data=self.request_data)
 
     def test_get_method_returns_valid_payloads(self):
@@ -30,6 +30,7 @@ class TestPayloadView(APITestCase):
         self.assertEqual(response.data['title'], data['title'])
         self.assertEqual(response.data['body'], data['body'])
 
+    # TODO: Fix error not thrown when PayloadRequestFactory used in failing tests
     def test_post_method_returns_bad_response_for_invalid_data(self):
         url = '/notifications/payloads/'
         # incorrect/missing key
