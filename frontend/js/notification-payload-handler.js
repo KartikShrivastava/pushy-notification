@@ -32,9 +32,6 @@ function saveNotificationPayloadToDatabase(payload) {
         throw new Error('Bad status code from server.')
       return response
     })
-    .then(function (serverResponse) {
-      console.log(serverResponse)
-    })
     .catch(function (err) {
       console.error('Unable to send push subscription to database.', err)
     })
