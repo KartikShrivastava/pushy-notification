@@ -1,25 +1,25 @@
-from django.forms import ValidationError
 from django.test import TestCase
+from rest_framework.exceptions import ValidationError
 
 from apps.notifications.services.payload import PayloadService
+from apps.notifications.tests.factories.payload_request import PayloadRequestFactory
 
 
 class TestPayloadServices(TestCase):
     def test_create_payload_successful_creation(self):
-        validated_data = {'title': 'Pushy notification title',
-                          'body': 'Notification body can be a bit more longer'}
-        payload = PayloadService.create_payload(validated_data=validated_data)
-        self.assertEqual(payload.title, validated_data['title'])
-        self.assertEqual(payload.body, validated_data['body'])
+        request_data = PayloadRequestFactory()
+        payload = PayloadService.create_payload(request_data=request_data)
+        self.assertEqual(payload['title'], request_data['title'])
+        self.assertEqual(payload['body'], request_data['body'])
 
     def test_create_payload_throws_exception_for_empty_title(self):
-        validated_data = {'title': '',
-                          'body': 'Notification body can be a bit more longer'}
+        request_data = PayloadRequestFactory()
+        request_data['title'] = ''
         self.assertRaises(ValidationError, PayloadService.create_payload,
-                          validated_data=validated_data)
+                          request_data=request_data)
 
     def test_create_payload_throws_exception_for_empty_body(self):
-        validated_data = {'title': 'Pushy notification title',
-                          'body': ''}
+        request_data = PayloadRequestFactory()
+        request_data['body'] = ''
         self.assertRaises(ValidationError, PayloadService.create_payload,
-                          validated_data=validated_data)
+                          request_data=request_data)

@@ -1,16 +1,19 @@
-from django.forms import ValidationError
 from apps.subscribers.models.subscriber import Subscriber
+from apps.subscribers.serializers.subscriber import SubscriberSerializer
 
 
 class SubscriberService:
     @classmethod
-    def create_subscriber(cls, validated_data):
-        if validated_data['endpoint_url'] == '':
-            raise ValidationError(message='Cannont insert subscriber with empty endpoint')
-        if validated_data['p256dh_key'] == '':
-            raise ValidationError(message='Cannot insert subscriber with empty p256dh key')
-        if validated_data['auth_key'] == '':
-            raise ValidationError(message='Cannot insert subscriber with empty auth key')
+    def create_subscriber(cls, request_data):
+        subscriber_serializer = SubscriberSerializer(data=request_data)
+        subscriber_serializer.is_valid(raise_exception=True)
+        validated_data = subscriber_serializer.validated_data
+        serialized_subscriber = SubscriberSerializer(Subscriber.objects.create(
+                                                     **validated_data)).data
+        return serialized_subscriber
 
-        inserted_subscriber = Subscriber.objects.create(**validated_data)
-        return inserted_subscriber
+    @classmethod
+    def get_all_subscribers(cls):
+        subscribers = Subscriber.objects.all()
+        subscriber_serializers = SubscriberSerializer(subscribers, many=True)
+        return subscriber_serializers.data
